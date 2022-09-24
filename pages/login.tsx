@@ -30,7 +30,7 @@ const ButtonFacebook = styled(Button)`
 	margin-top: 10px;
 `
 
-const login = () => {
+const Login = () => {
 	const [signInWithGoogle, _user, _loading, _error] = useSignInWithGoogle(Auth);
 	const [signInWithFacebook, user, loading, error] = useSignInWithFacebook(Auth);
     const signIn = () => {
@@ -65,4 +65,4 @@ const login = () => {
 	);
 };
 
-export default login;
+export default Login;
