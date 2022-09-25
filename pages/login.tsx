@@ -4,7 +4,7 @@ import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
 import LogoAppChat from '../assets/images/Avatar__user.png';
-import { useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks/auth'
+import { useSignInWithFacebook, useSignInWithGithub, useSignInWithGoogle } from 'react-firebase-hooks/auth'
 import { Auth } from '../config/firebase';
 const StyleContainer = styled.div`
 	height: 100vh;
@@ -33,11 +33,15 @@ const ButtonFacebook = styled(Button)`
 const Login = () => {
 	const [signInWithGoogle, _user, _loading, _error] = useSignInWithGoogle(Auth);
 	const [signInWithFacebook, user, loading, error] = useSignInWithFacebook(Auth);
+	const [signInWithGithub, userGithub, loadingGithub, errorGithub] = useSignInWithGithub(Auth);
     const signIn = () => {
         signInWithGoogle();
     }
 	const signInFacebook = () => {
 		signInWithFacebook();
+	}
+	const signInGithub = () => {
+		signInWithGithub();		
 	}
 	return (
 		<StyleContainer>
@@ -59,6 +63,12 @@ const Login = () => {
 					onClick={signInFacebook}
 				>
 					Sign in with Facebook
+				</ButtonFacebook>
+				<ButtonFacebook
+					variant="outlined"
+					onClick={signInGithub}
+				>
+					Sign in with Github
 				</ButtonFacebook>
 			</StyledLoginContainer>
 		</StyleContainer>

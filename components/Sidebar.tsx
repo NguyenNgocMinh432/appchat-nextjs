@@ -7,12 +7,14 @@ import ChatIcon from '@mui/icons-material/Chat';
 import MoreVerticalIcon from '@mui/icons-material/MoreVert';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SearchIcon from '@mui/icons-material/Search';
-import { Auth } from '../config/firebase';
+import { Auth, db } from '../config/firebase';
 import { signOut } from 'firebase/auth';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useCollection } from 'react-firebase-hooks/firestore';
 import { useState } from 'react';
-
+import * as EmailValidator from "email-validator";
+import { addDoc, collection, query, where } from 'firebase/firestore';
 
 const StyleContainer = styled.div`
 	height: 100vh;
@@ -63,10 +65,34 @@ const Sidebar = () => {
 
 	const toggleDialog = () => {
 		setIsOpenDialog(!isOpenDialog);
+		if ( !isOpenDialog ) {
+			setRecipientEmail('')
+		}
+	}
+	const closeDialog = () => {
+		setIsOpenDialog(false);
+	}
+	// Lay du lieu ra de check
+	const queryGetConversationCurrentUser = query(collection(db, 'conversations'), where('users', 'array-contains', loggedInUser?.email))
+	const [conversationsSnapshot, __loading, __error] = useCollection(queryGetConversationCurrentUser)
+
+	// Check xem cuoc hoi thoai do da ton tai hay chua
+	const isConversationAlreadyExits = (recipientEmail: string) => {
+		return conversationsSnapshot?.docs.find(conversations => (conversations.data() as Conversation).users.incudes(recipientEmail))
 	}
 
-	const createConversation = () => {
+	const isInvitingSelf = recipientEmail === loggedInUser?.email
+	const createConversation = async () => {
+		if ( !recipientEmail ) return
+		//Check xem co phai dang chat voi chinh minh hay khong
+		if ( EmailValidator.validate( recipientEmail ) && !isInvitingSelf && !isConversationAlreadyExits ) {
+			// add conversations user db
+			await addDoc(collection(db , "conversations"), {
+				users: [ loggedInUser?.email, recipientEmail ]
+			})
+		}
 
+		closeDialog();
 	}
 
 	const logout = () => {
@@ -75,8 +101,8 @@ const Sidebar = () => {
 	return (
 		<StyleContainer>
 			<StyledHeader>
-				<Tooltip title="User email" placement="left">
-					<StyledUserAvatar />
+				<Tooltip title={ loggedInUser?.email as string } placement="left">
+					<StyledUserAvatar src={ loggedInUser?.photoURL || "" } />
 				</Tooltip>
 
 				<div>

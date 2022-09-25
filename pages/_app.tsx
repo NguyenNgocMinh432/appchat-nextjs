@@ -8,8 +8,10 @@ import { setDoc, doc, serverTimestamp } from 'firebase/firestore';
 
 function MyApp({ Component, pageProps }: AppProps) {
 	const [loggedInUser, loading, _error] = useAuthState(Auth);
-
+	console.log("loggedInUser", loggedInUser);
+	
 	useEffect(() => {
+		// luu email dang nhap len firebasestore
 		const setUserInDb = async () => {
 			try {
 				await setDoc(
