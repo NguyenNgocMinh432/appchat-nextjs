@@ -15,6 +15,8 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import { useState } from 'react';
 import * as EmailValidator from "email-validator";
 import { addDoc, collection, query, where } from 'firebase/firestore';
+import { Conversation } from "../types/index";
+import ConversationSelect from './ConversationSelect';
 
 const StyleContainer = styled.div`
 	height: 100vh;
@@ -78,20 +80,19 @@ const Sidebar = () => {
 
 	// Check xem cuoc hoi thoai do da ton tai hay chua
 	const isConversationAlreadyExits = (recipientEmail: string) => {
-		return conversationsSnapshot?.docs.find(conversations => (conversations.data() as Conversation).users.incudes(recipientEmail))
+		return conversationsSnapshot?.docs.find(conversations => (conversations.data() as Conversation).users.includes(recipientEmail))
 	}
 
 	const isInvitingSelf = recipientEmail === loggedInUser?.email
 	const createConversation = async () => {
 		if ( !recipientEmail ) return
 		//Check xem co phai dang chat voi chinh minh hay khong
-		if ( EmailValidator.validate( recipientEmail ) && !isInvitingSelf && !isConversationAlreadyExits ) {
+		if ( EmailValidator.validate( recipientEmail ) && !isInvitingSelf && !isConversationAlreadyExits(recipientEmail) ) {
 			// add conversations user db
 			await addDoc(collection(db , "conversations"), {
 				users: [ loggedInUser?.email, recipientEmail ]
 			})
 		}
-
 		closeDialog();
 	}
 
@@ -124,6 +125,14 @@ const Sidebar = () => {
 			<StyledSidebarButton onClick={ () => {
 				toggleDialog();
 			}}>Start a new conversations</StyledSidebarButton>
+
+			{/* hien thong tin nguoi dung */}
+			{ conversationsSnapshot?.docs.map((conversations) => (
+				<ConversationSelect 
+				key={conversations.id} 
+				id={conversations.id}
+				conversationUser = {(conversations.data() as Conversation).users}
+			/>)) }
 
 			{/* dialog */}
 			<Dialog open={isOpenDialog} onClose={toggleDialog}>
