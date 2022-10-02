@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import LogoAppChat from '../assets/images/Avatar__user.png';
 import { useSignInWithFacebook, useSignInWithGithub, useSignInWithGoogle } from 'react-firebase-hooks/auth'
 import { Auth } from '../config/firebase';
+
 const StyleContainer = styled.div`
 	height: 100vh;
 	display: grid;
