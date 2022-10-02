@@ -1,6 +1,8 @@
 import { ConversationSelectProps } from '../types/index';
 import styled from 'styled-components';
 import { useRecipient } from '../hooks/useRecipient';
+import RecipientAvatar from './RecipientAvatar';
+import { useRouter } from 'next/router';
 
 const StyleContainerSelect = styled.div`
 	display: flex;
@@ -14,12 +16,18 @@ const StyleContainerSelect = styled.div`
 `;
 
 const ConversationSelect = ({ id, conversationUser }: ConversationSelectProps) => {
-	console.log("users", conversationUser);
-	const {recipient, recipientEmail} = useRecipient( conversationUser  );
-	
-	return <StyleContainerSelect>
-		<span>{ recipientEmail }</span>
-	</StyleContainerSelect>;
+	console.log('users', conversationUser);
+	const { recipient, recipientEmail } = useRecipient(conversationUser);
+	const route = useRouter();
+	const onSelectConversation = () => {
+		route.push(`/conversations/${id}`)
+	}
+	return (
+		<StyleContainerSelect onClick={onSelectConversation}>
+			<RecipientAvatar recipient={recipient} recipientEmail={recipientEmail} />
+			<span>{recipientEmail}</span>
+		</StyleContainerSelect>
+	);
 };
 
 export default ConversationSelect;

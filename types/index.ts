@@ -13,3 +13,8 @@ export interface AppUser {
     lastSeen: Timestamp,
     photoUrl: string
 }
+
+export interface RecipientAvatarProps {
+    recipient: AppUser | undefined;
+    recipientEmail: string | undefined;
+}
