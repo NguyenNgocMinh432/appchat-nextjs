@@ -18,3 +18,10 @@ export interface RecipientAvatarProps {
     recipient: AppUser | undefined;
     recipientEmail: string | undefined;
 }
+export interface Messages {
+    id: string;
+    conversation_id: string;
+    text: string;
+    sent_at: string | null
+    user: string
+}
