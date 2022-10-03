@@ -3,8 +3,8 @@ import { collection, DocumentData, orderBy, query, QueryDocumentSnapshot, Timest
 import { db } from "../config/firebase"
 import { Messages } from "../types"
 
-export const generateQueryMessage = (conversationId?: String) => {
-   return query(collection(db, 'message'), where('conversation_id', '==', conversationId), orderBy('sent_at', 'asc'))
+export const generateQueryMessage = (conversationId?: string) => {
+   return query(collection(db, 'messages'), where('conversation_id', '==', conversationId), orderBy('sent_at', 'asc'))
 }
 
 export const transforMessage = (message:QueryDocumentSnapshot<DocumentData>) => ({
