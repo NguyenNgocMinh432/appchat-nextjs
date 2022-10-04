@@ -55,7 +55,7 @@ export const getServerSideProps: GetServerSideProps<Props, { id: string }, Previ
 ) => {
 	console.log('context', context);
 	const conversationId = context.params?.id;
-	const conversationRef = doc(db, 'conversations', conversationId as string | undefined);
+	const conversationRef = doc(db, 'conversations', conversationId as string);
 	console.log('conversationId', conversationId);
 	console.log('conversationRef', conversationRef);
 
