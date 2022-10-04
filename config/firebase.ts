@@ -7,12 +7,12 @@ import { FacebookAuthProvider, getAuth, GithubAuthProvider, GoogleAuthProvider }
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-	apiKey: 'AIzaSyA7XoM7AJtAdF9glSk6qqx0Z7Y9Nlxr_y8',
-	authDomain: 'appchat-nextjs-20760.firebaseapp.com',
-	projectId: 'appchat-nextjs-20760',
-	storageBucket: 'appchat-nextjs-20760.appspot.com',
-	messagingSenderId: '1062489960497',
-	appId: '1:1062489960497:web:a73054302de65524c66510',
+	apiKey: process.env.NEXT_PUBLIC_APIKEY,
+	authDomain: process.env.NEXT_PUBLIC_AUTHDOMAIN,
+	projectId: process.env.NEXT_PUBLIC_PROJECTID,
+	storageBucket: process.env.NEXT_PUBLIC_STORAGEBUCKET,
+	messagingSenderId: process.env.NEXT_PUBLIC_MESSAGINGSENDERID,
+	appId: process.env.NEXT_PUBLIC_APPID,
 };
 
 // Initialize Firebase

@@ -12,7 +12,7 @@ import { getRecipientEmail } from '../../utils/getRecipientEmail';
 
 interface Props {
 	conversation: Conversation;
-	message: Messages;
+	message: Messages[];
 }
 const StyleContainer = styled.div`
 	display: flex;

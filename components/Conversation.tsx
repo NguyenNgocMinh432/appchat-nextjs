@@ -18,7 +18,7 @@ import Message from './Message';
 import InsertEmotionIcon from '@mui/icons-material/InsertEmoticon';
 import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
-import { KeyboardEventHandler, useState } from 'react';
+import { KeyboardEventHandler, MouseEventHandler, useRef, useState } from 'react';
 import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
 
 export interface ConversationScreenProps {
@@ -78,6 +78,9 @@ const StyleInput = styled.input`
 	margin-left: 15px;
 	margin-right: 15px;
 `;
+const EndOfMessageForAutoScroll = styled.div`
+    margin-bottom: 30px;
+`
 const ConversationScreen = ({ conversation, message }: ConversationScreenProps) => {
 	const [newMessage, setNewMessage] = useState('');
 	const [loggedInUser, _loading, _error] = useAuthState(Auth);
@@ -113,6 +116,7 @@ const ConversationScreen = ({ conversation, message }: ConversationScreenProps) 
 			user: loggedInUser?.email,
 		});
 		setNewMessage('');
+        scrollToBottom();
 	};
 	const sendMessageOnEnter: KeyboardEventHandler<HTMLInputElement> | undefined = (event) => {
 		if (event.key === 'Enter') {
@@ -121,6 +125,14 @@ const ConversationScreen = ({ conversation, message }: ConversationScreenProps) 
 			addMessageToDbAndUpdateLastSeen();
 		}
 	};
+    const handleSendMessageClickIcon: MouseEventHandler<HTMLButtonElement> | undefined = (event) => {
+            if (!newMessage) return;
+			addMessageToDbAndUpdateLastSeen();
+    }
+    const endOfMessageRef = useRef<HTMLDivElement>(null)
+    const scrollToBottom = () => {
+        endOfMessageRef.current?.scrollIntoView({behavior:"smooth"})
+    }
 	return (
 		<>
 			<StyleRecipientHeader>
@@ -143,7 +155,9 @@ const ConversationScreen = ({ conversation, message }: ConversationScreenProps) 
 				</StyledHeaderIcons>
 			</StyleRecipientHeader>
 
-			<StyledMessageContainer>{showMessage()}</StyledMessageContainer>
+			<StyledMessageContainer>{showMessage()}
+            <EndOfMessageForAutoScroll ref={endOfMessageRef} />
+            </StyledMessageContainer>
 			<StyledInputContainer>
 				<InsertEmotionIcon />
 				<StyleInput
@@ -151,7 +165,7 @@ const ConversationScreen = ({ conversation, message }: ConversationScreenProps) 
 					onChange={(e) => setNewMessage(e.target.value)}
 					onKeyDown={sendMessageOnEnter}
 				/>
-				<IconButton>
+				<IconButton onClick={ handleSendMessageClickIcon }>
 					<SendIcon />
 				</IconButton>
 				<IconButton>
