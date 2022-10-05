@@ -37,10 +37,12 @@ const Message = ({ key, message }: { key: number; message: Messages }) => {
 		loggedInUser?.email === message?.user ? StyledSendMessage : StyledReciverMessage;
 
 	return (
-		<StyledMessage>
-			<MessageType>{message.text}</MessageType>
+		<div>
+			<MessageType>
+				{message.text}
 			<StyledTimestamp>{message.sent_at}</StyledTimestamp>
-		</StyledMessage>
+			</MessageType>
+		</div>
 	);
 };
 
